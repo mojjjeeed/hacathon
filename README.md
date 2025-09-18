@@ -11,7 +11,7 @@
 
 ---
 
-![Mock picture](assets/images/mock.png)  
+![Mock picture](assets/images/logo.jpg)  
 
 **Penny** helps you and your friends keep track of shared expenses with ease.  
 Add people, log expenses, and let Penny handle the math so everyone knows what they owe.  
