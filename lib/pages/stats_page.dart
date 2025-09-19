@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:shared_expenses/theme/colors.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import '../theme/colors.dart';
+import '../scoped_model/expenseScope.dart';
 import 'package:screenshot/screenshot.dart';
 // import 'package:share/share.dart';
 import 'dart:io';

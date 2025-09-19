@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:shared_expenses/theme/colors.dart';
-import 'package:shared_expenses/pages/daily_page.dart';
-import 'package:shared_expenses/pages/stats_page.dart';
-import 'package:shared_expenses/pages/profile_page.dart';
-import 'package:shared_expenses/pages/newentry_page.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import '../theme/colors.dart';
+import 'daily_page.dart';
+import 'stats_page.dart';
+import 'profile_page.dart';
+import 'newentry_page.dart';
+import 'ml_insights_page.dart';
+import '../scoped_model/expenseScope.dart';
 import 'package:animations/animations.dart';
 
 class RootApp extends StatefulWidget {
@@ -34,6 +35,7 @@ class _RootAppState extends State<RootApp> {
           children: [
             DailyPage(model: model, callback: callback),
             StatsPage(model: model, callback: callback),
+            MLInsightsPage(model: model, callback: callback),
             ProfilePage(model: model),
           ],
           onPageChanged: (val) {
@@ -51,6 +53,7 @@ class _RootAppState extends State<RootApp> {
         icons: <IconData>[
           Ionicons.md_calendar,
           Ionicons.md_stats,
+          Ionicons.md_analytics,
           Ionicons.md_settings,
         ],
         activeIndex: pageIndex,

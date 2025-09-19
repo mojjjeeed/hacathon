@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import '../scoped_model/expenseScope.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 

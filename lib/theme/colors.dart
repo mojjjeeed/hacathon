@@ -13,6 +13,7 @@ List<List<Color>> myColors = [
   [Color(0xff008F7A), Color(0xff7DE197)],
   [Color(0xff016D18), Color(0xff93bb3c)],
   [Color(0xff5E65DE), Color(0xff1488cc)],
-  [Color(0xffDA0959), Color(0xffF47DCB)]
+  [Color(0xffDA0959), Color(0xffF47DCB)],
+  [Color(0xffFF6B35), Color(0xffF7931E)]
 ];
 

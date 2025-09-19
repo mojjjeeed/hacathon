@@ -1,5 +1,5 @@
-name: shared_expenses
-description: Shared Expense Manager
+name: Penny
+description: Smart Expense Manager
 
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -30,7 +30,7 @@ dependencies:
   screenshot: ^1.2.3
   pie_chart: ^5.1.0
   sqflite: ^2.0.1
-  share_plus:
+  share_plus: ^4.0.4
   image_gallery_saver: '^1.7.1'
 
 dev_dependencies:

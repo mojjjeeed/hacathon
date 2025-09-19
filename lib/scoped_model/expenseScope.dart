@@ -2,6 +2,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import '../services/widget_service.dart';
 // import 'package:intl/intl.dart';
 // import 'dart:async';
 // import 'package:path/path.dart';
@@ -38,6 +39,7 @@ class ExpenseModel extends Model {
   List<Map<String, dynamic>> _expenses = [];
   // for now, only month is added, no year, so a particular month for several years will be considered same
   String _currentMonth = '1';
+  String _pendingWidgetAction;
 
   // Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
 
@@ -45,6 +47,7 @@ class ExpenseModel extends Model {
   List<String> get getCategories => _categories;
   List<String> get getUsers => _users;
   String get getCurrentMonth => _currentMonth;
+  String get getPendingWidgetAction => _pendingWidgetAction;
 
   void setUsers(List<String> userList) {
     _users = userList;
@@ -62,6 +65,16 @@ class ExpenseModel extends Model {
     _categories = [];
     _users = [];
     _expenses = [];
+    upDateUserData(true, true, true, false);
+    notifyListeners();
+  }
+
+  void resetToDemoData() {
+    _categories = [];
+    _users = [];
+    _expenses = [];
+    testData();
+    upDateUserData(true, true, true, true);
     notifyListeners();
   }
 
@@ -69,6 +82,7 @@ class ExpenseModel extends Model {
     _expenses.insert(0, newExpenseEntry);
     sortExpenses();
     upDateUserData(false, false, true, false);
+    _updateWidgetData();
     notifyListeners();
   }
 
@@ -76,14 +90,15 @@ class ExpenseModel extends Model {
     _expenses.removeAt(index);
     sortExpenses();
     upDateUserData(false, false, true, false);
+    _updateWidgetData();
     notifyListeners();
   }
 
   void editExpense(int index, Map<String, dynamic> updatedExpenseEntry) {
     _expenses[index] = updatedExpenseEntry;
     sortExpenses();
-
     upDateUserData(false, false, true, false);
+    _updateWidgetData();
     notifyListeners();
   }
 
@@ -91,26 +106,48 @@ class ExpenseModel extends Model {
     _currentMonth = cMonth;
     upDateUserData(false, false, false, true);
     calculateShares();
+    _updateWidgetData();
+    notifyListeners();
+  }
+
+  void setPendingWidgetAction(String action) {
+    _pendingWidgetAction = action;
+    notifyListeners();
+  }
+
+  void clearPendingWidgetAction() {
+    _pendingWidgetAction = null;
     notifyListeners();
   }
 
   void setInitValues() {
-    if (!kReleaseMode) {
-      // in case of debug mode use test data.
-
-      testData();
-      return;
-    }
     SharedPreferences.getInstance().then((prefs) {
       _users = prefs.getStringList('users') ?? [];
       _categories = prefs.getStringList('categories') ?? [];
       _currentMonth = prefs.getString('currentMonth') ?? '1';
-      if (_users.length != 0 && _categories.length != 0) {
-        _expenses =
-            (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, dynamic>.from(e))?.toList();
+      
+      // Load expenses if they exist
+      String expensesJson = prefs.getString('expenses');
+      if (expensesJson != null && expensesJson.isNotEmpty) {
+        try {
+          _expenses = (json.decode(expensesJson) as Iterable)
+              .map((e) => Map<String, dynamic>.from(e))
+              .toList();
+        } catch (e) {
+          print('Error loading expenses: $e');
+          _expenses = [];
+        }
       } else {
         _expenses = [];
       }
+      
+      // If no data exists, initialize with test data for demo purposes
+      if (_users.isEmpty && _categories.isEmpty && _expenses.isEmpty) {
+        testData();
+        // Save the test data
+        upDateUserData(true, true, true, true);
+      }
+      
       notifyListeners();
     });
   }
@@ -287,5 +324,22 @@ class ExpenseModel extends Model {
         "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
     ];
+  }
+
+  void _updateWidgetData() {
+    // Calculate total expenses for current month
+    double totalExpenses = 0.0;
+    for (Map entry in _expenses) {
+      String month = int.parse(entry['date'].split('-')[1]).toString();
+      if (_currentMonth == '13' || _currentMonth == month) {
+        totalExpenses += double.parse(entry['amount']);
+      }
+    }
+    
+    // Update widget data
+    WidgetService.updateWidgetData(
+      totalExpenses: totalExpenses,
+      currentMonth: _currentMonth,
+    );
   }
 }

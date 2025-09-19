@@ -1,13 +1,13 @@
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:shared_expenses/theme/colors.dart';
+import '../theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import '../scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_expenses/pages/addUser_page.dart';
+import 'addUser_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:animations/animations.dart';
@@ -87,14 +87,14 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 13,
             ),
             Text(
-              "Shared Expense Manager",
+              "Penny",
               style: TextStyle(
                 fontSize: 25,
                 color: myColors[2][0],
               ),
             ),
             Text(
-              "v 0.1.2",
+              "v 0.1.1",
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -277,26 +277,81 @@ class _ProfilePageState extends State<ProfilePage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Clear Expense Entries'),
+          title: Text('Reset Data'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Do you want to clear all expense entries?'),
+                Text('Choose what you want to reset:'),
+                SizedBox(height: 16),
+                ListTile(
+                  leading: Icon(Icons.clear_all, color: red),
+                  title: Text('Clear All Data'),
+                  subtitle: Text('Remove all expenses, users, and categories'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _confirmReset('clear');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.restore, color: blue),
+                  title: Text('Reset to Demo Data'),
+                  subtitle: Text('Clear current data and load demo data'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _confirmReset('demo');
+                  },
+                ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: Text('Cancel'),
               onPressed: () {
-                widget.model.resetAll();
                 Navigator.of(context).pop();
               },
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmReset(String type) {
+    String title = type == 'clear' ? 'Clear All Data' : 'Reset to Demo Data';
+    String message = type == 'clear' 
+        ? 'This will permanently delete all your data. Are you sure?'
+        : 'This will replace your current data with demo data. Are you sure?';
+    
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
             TextButton(
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                if (type == 'clear') {
+                  widget.model.resetAll();
+                } else {
+                  widget.model.resetToDemoData();
+                }
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(type == 'clear' ? 'All data cleared' : 'Reset to demo data'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
             ),
           ],

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Penny</string>
+    <string name="appwidget_text">Widget Text</string>
+    <string name="expense_summary_widget_description">Shows your total expenses for the current month</string>
+    <string name="quick_add_widget_description">Quick access to add new expenses</string>
+</resources>

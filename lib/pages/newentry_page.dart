@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
-import 'package:shared_expenses/theme/colors.dart';
+import '../scoped_model/expenseScope.dart';
+import '../theme/colors.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:collection/collection.dart';
 
@@ -46,12 +46,39 @@ class _NewEntryLogState extends State<NewEntryLog> {
     });
   }
 
+  void _handleWidgetAction() {
+    // Check if there's a pending widget action
+    String pendingAction = model.getPendingWidgetAction;
+    if (pendingAction != null) {
+      // Pre-fill category based on widget action
+      _categoryEditor.text = pendingAction;
+      
+      // Clear the pending action
+      model.clearPendingWidgetAction();
+      
+      // Show a snackbar to indicate the action
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Quick add: $pendingAction category selected'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
     model = ScopedModel.of(widget.context);
     super.initState();
     editRecord = widget.index != -999;
     _users = model.getUsers;
+    
+    // Handle widget action
+    _handleWidgetAction();
 
     if (editRecord) {
       Map<String, dynamic> data = {...model.getExpenses[widget.index]};

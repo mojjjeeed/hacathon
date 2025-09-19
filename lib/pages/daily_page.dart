@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_expenses/theme/colors.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
-import 'package:shared_expenses/pages/newentry_page.dart';
+import '../theme/colors.dart';
+import '../scoped_model/expenseScope.dart';
+import 'newentry_page.dart';
 import 'package:animations/animations.dart';
 
 class DailyPage extends StatelessWidget {
