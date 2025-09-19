@@ -65,7 +65,7 @@ flowchart TD
     B --> C[Dashboard Updates 📊]
     C --> D[Balance Calculation ⚖️]
     D --> E[Local Storage Save 💾]
-    E --> F[Export / Import (Optional) 📤]
+    E --> F[Export Import Optional 📤]
 ```
 
 This ensures **simplicity, transparency, and privacy-first storage**! 🔒✨
@@ -222,4 +222,4 @@ Made with 💚 by open-source contributors 👥.
 
 ---
 
-### 🚀 Ready to get started? Download Penny now! 📲
+### 🚀 Ready to get started? Download Penny now! 📲✨
